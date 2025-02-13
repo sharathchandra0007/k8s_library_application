@@ -1,0 +1,10 @@
+## pod with nginx container
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: classical
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.27 

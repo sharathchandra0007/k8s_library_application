@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: booksdb-sts
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      db: books
+  serviceName: booksdb-service    
+  template:
+    metadata:
+      labels: 
+        db: books
+    spec:
+      containers:
+        - name: booksdb-container
+          image: postgres:15-alpine
+          envFrom:
+            - secretRef: 
+                name: booksdb-secrets
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          ports:
+           - containerPort: 5432
+          volumeMounts:
+            - name: booksdb-volume
+              mountPath: /var/lib/postgresql/data
+              subPath: data
+  volumeClaimTemplates:
+    - metadata:
+        name: booksdb-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booksdb-service
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    db: books
+  ports:
+    - port: 5432
+      targetPort: 5432

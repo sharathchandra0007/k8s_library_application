@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deploy
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      colour: purple
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        colour: purple
+    spec: 
+      containers:
+        - name: users-pod
+          image: shaikkhajaibrahim/libuserssvc:1.0
+          envFrom:
+            - secretRef:
+                name: usersservice-secrets
+          ports:
+            - containerPort: 8000
+          resources:  
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 128Mi
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service   
+metadata: 
+  name: userservice-deploy
+spec:
+  type: ClusterIP
+  selector: 
+    colour: purple
+  ports:
+    - port: 8000
+      targetPort: 8000                             

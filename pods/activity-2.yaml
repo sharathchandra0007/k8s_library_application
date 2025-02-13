@@ -1,0 +1,15 @@
+# Pod with 2 containers 
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: class
+  spec:
+    containers:
+      - name: cab
+        image: nginx
+      - name: auto
+        image: alpine
+        command:
+          - sleep
+          - 20s    

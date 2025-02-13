@@ -1,0 +1,22 @@
+---
+
+# cerate a pod with a container and  pass environmental variables
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: budwieser
+spec: 
+  containers:
+    - name: test
+      image: alpine
+      args:
+        - sleep
+        - 1d
+      env:
+        - name: USERNAME
+          value: admin
+        - name : PASSWORD 
+          value: admin@123        

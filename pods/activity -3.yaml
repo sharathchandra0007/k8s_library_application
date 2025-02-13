@@ -1,0 +1,13 @@
+# pod for crashloopbackoff
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash
+spec:
+  containers:
+    - name: loop
+      image: nginx
+      args:
+        - sleep
+          10s  

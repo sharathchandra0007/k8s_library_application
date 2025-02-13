@@ -1,0 +1,35 @@
+
+### Node selector
+  
+  * The simplest way to control which nodes a pod is scheduled on.
+  * Specify nodeSelector in the pod specification to define node labels the pod requires
+  * Only nodes with the specified labels will be considered for the pod.
+
+  yaml
+spec:
+nodeSelector:
+
+---
+
+apiVersion: v1  
+kind: Pod
+metadata:
+  name: oldmonk
+spec: 
+  containers:
+    - name: test
+      image: alpine
+      args:
+        - sleep
+        - 1d
+      env:
+        - name: USERNAME
+          value: admin
+        - name : PASSWORD 
+          value: admin@123
+  nodeSelector: 
+    env: dev  
+
+---
+ 
+

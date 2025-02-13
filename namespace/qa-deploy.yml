@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sarath
+  namespace: qa
+spec:
+  minReadySeconds: 5
+  replicas: 3
+  selector:
+    matchLabels:
+      colour: purple
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 30%
+      maxUnavailable: 30%
+  template:
+    metadata:
+      labels:
+        colour: purple
+    spec: 
+      containers:
+        - name: qa-pod
+          image: nginx
+          ports:
+            - containerPort: 80
+          resources:  
+            requests:
+              memory: 24M
+              cpu: 100m
+            limits:
+              memory: 128M
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service   
+metadata: 
+  name: qaservice-deploy
+spec:
+  type: ClusterIP
+  selector: 
+    app: web
+  ports:
+    - port: 80
+      targetPort: 80                            

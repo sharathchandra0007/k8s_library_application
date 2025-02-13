@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-deploy
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      colour: brown
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        colour: brown
+    spec: 
+      containers:
+        - name: lib-pod
+          image: shaikkhajaibrahim/libwebstore:1.0
+          env:
+            - name: REACT_APP_BACKEND_API_URL
+              value: http://:8000/api/v1
+            - name: REACT_APP_BOOKS_API_URL
+              value: http://:8000/api/v1/books
+            - name: REACT_APP_USERS_API_URL
+              value: http://:8000/api/v1/users  
+          ports:
+            - containerPort: 3000
+          resources:  
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service   
+metadata: 
+  name: libraryweb-deploy
+spec:
+  type: LoadBalancer
+  selector: 
+    colour: brown
+  ports:
+    - port: 3000
+      targetPort: 3000                             

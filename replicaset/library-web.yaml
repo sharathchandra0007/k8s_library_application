@@ -1,0 +1,54 @@
+  apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    name: library-web-rep
+    labels:
+      app: uber
+  spec:
+    minReadySeconds: 5
+    replicas: 1
+    selector:
+      matchLabels:
+        colour: white
+    template:
+      metadata: 
+        labels:
+          colour: white
+      spec: 
+        containers:
+          - name: lib-pod
+            image: shaikkhajaibrahim/libwebstore:1.0
+            env:
+              - name: REACT_APP_BACKEND_API_URL
+                value: http://:8000/api/v1
+              - name: REACT_APP_BOOKS_API_URL
+                value: http://:8000/api/v1/books
+              - name: REACT_APP_USERS_API_URL
+                value: http://:8000/api/v1/users  
+            ports:
+              - containerPort: 3000
+            resources:
+              requests:
+                memory: 24M
+                cpu: 100m
+              limits:
+                memory: 128M
+                cpu: 500m
+
+
+---
+
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: library-src
+  spec:
+    type: NodePort
+    selector:
+      colour: white
+    ports:
+      - port: 3000
+        targetPort: 3000  
+
+
+                        

@@ -1,0 +1,28 @@
+---
+
+# create a pod with 2 containers and 2 init containeres
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: budwieser
+spec:
+  initContainers:
+    - name: db1
+      image: alpine
+      args:
+        - sleep
+        - 30s
+    - name: db2
+      image: alpine
+      args:
+        - sleep
+        - 30s
+  containers:
+    - name: web
+      image: nginx
+    - name: app
+      image: alpine 
+      args:
+        - sleep
+        - 1d         

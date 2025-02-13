@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: author
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      colour: black
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        colour: black
+    spec: 
+      containers:
+        - name: author-pod
+          image: alpine
+          ports:
+            - containerPort: 8098
+          resources:  
+            requests:
+              memory: 24M
+              cpu: 100m
+            limits:
+              memory: 128M
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service   
+metadata: 
+  name: authorsrc-deploy
+spec:
+  type: ClusterIP
+  selector: 
+    app: web
+  ports:
+    - port: 8098
+      targetPort: 8098                            

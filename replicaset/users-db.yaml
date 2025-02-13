@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: users-db-rep
+  labels:
+    app: web
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      colour: black
+  template:
+    metadata: 
+      labels:
+        colour: black
+    spec: 
+      containers:
+        - name: db-pod
+          image: postgres:15-alpine
+          envFrom:
+            - configMapRef:
+                name: config-users-db
+            - secretRef:
+                name: usersdb-secrets              
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: 24M
+              cpu: 100m
+            limits:
+              memory: 128M
+              cpu: 500m
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-src
+spec:
+  type: ClusterIP
+  selector:
+    colour: black
+  ports:
+    - port: 5432
+      targetPort: 5432  
+
+
+                       

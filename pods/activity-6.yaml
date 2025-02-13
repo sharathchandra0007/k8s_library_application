@@ -1,0 +1,17 @@
+---
+
+## lets start adding labels
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: budwiser
+  labels:
+    type: beer
+    quantity: 650ml
+spec: 
+  containers:
+    - name: web
+      image: alpine
+      
+

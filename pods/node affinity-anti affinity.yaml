@@ -1,0 +1,38 @@
+### Node afinity and Anti-afinity
+
+  * A more flexible and expressive method than nodeSelector
+  * Allows specifying rules for preferred and required node selection
+  * Required (hard constraint): The pod will only be scheduled if nodes match.
+  * Preferred (soft constraint): The scheduler tries to match but may skip if unavailable.
+  
+---
+
+apiVersion: v1  
+kind: Pod
+metadata:
+  name: beer
+spec: 
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - web
+                  - zeb
+  containers:
+    - name: test
+      image: alpine
+      args:
+        - sleep
+        - 1d
+      env:
+        - name: USERNAME
+          value: admin
+        - name : PASSWORD 
+          value: admin@123
+      ports:
+        - containerPort: 8080
+---        
